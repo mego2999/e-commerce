@@ -38,32 +38,13 @@ const Cart = () => {
     setError('');
     
     try {
-      // Check stock availability for all items
-      for (const item of cart) {
-        const productRef = doc(db, 'products', item.id);
-        const productDoc = await getDoc(productRef);
-        
-        if (!productDoc.exists()) {
-          setError(`Product ${item.name || item.title || 'unknown'} is no longer available.`);
-          return;
-        }
-        
-        const currentStock = productDoc.data().stock;
-        if (currentStock < item.quantity) {
-          setError(`Not enough stock available for ${item.name || item.title || 'unknown'}. Available: ${currentStock}`);
-          return;
-        }
-      }
-
-      const shippingAddress = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`;
-      
-      // First create the order
+      // Create the order directly
       const orderRef = await addDoc(collection(db, 'orders'), {
         items: cart,
         total: calculateTotal(),
         customerEmail: currentUser.email,
         customerName: shippingInfo.name,
-        shippingAddress,
+        shippingAddress: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`,
         phone: shippingInfo.phone,
         status: 'pending',
         createdAt: new Date(),
@@ -73,24 +54,11 @@ const Cart = () => {
 
       console.log("Order created with ID:", orderRef.id);
 
-      // Then update stock for each item separately
-      for (const item of cart) {
-        const productRef = doc(db, 'products', item.id);
-        const productDoc = await getDoc(productRef);
-        const currentStock = productDoc.data().stock;
-        const newStock = Math.max(0, currentStock - item.quantity);
-        
-        await updateDoc(productRef, { stock: newStock });
-        console.log(`Updated stock for ${item.name || item.title || item.id} to ${newStock}`);
-      }
-
-      // Clear the cart and show success message
-      for (const item of cart) {
-        removeFromCart(item.id);
-      }
+      // Clear the entire cart at once
+      cart.forEach(item => removeFromCart(item.id));
       
       alert('Order placed successfully! You can track your order in the My Orders section.');
-      navigate('/my-orders'); // Navigate to my-orders instead of orders
+      navigate('/my-orders');
     } catch (error) {
       console.error('Error creating order:', error);
       setError('There was an error processing your order. Please try again.');
