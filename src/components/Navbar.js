@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import './Navbar.css';
 
 const Navbar = ({ onSearch }) => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, userRole } = useAuth();
   const { getCartItemCount } = useCart();
-  const cartItemsCount = getCartItemCount();
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Update cart count whenever it might change
+  useEffect(() => {
+    setCartItemsCount(getCartItemCount());
+  }, [getCartItemCount, currentUser, location]);
 
   const handleLogout = async () => {
     try {

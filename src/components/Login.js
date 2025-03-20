@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 import './Login.css';
 
 const Login = () => {
@@ -17,24 +19,48 @@ const Login = () => {
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
-      navigate('/');
+      // Wait for login to complete
+      const userCredential = await login(email, password);
+      
+      // Get user data from Firestore to make sure everything is up-to-date
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      if (userDoc.exists()) {
+        // Small delay to ensure context updates
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
+      } else {
+        navigate('/');
+      }
     } catch (error) {
+      console.error('Login error:', error);
       setError('Failed to sign in');
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   async function handleGoogleSignIn() {
     try {
       setError('');
       setLoading(true);
-      await loginWithGoogle();
-      navigate('/');
+      // Wait for Google login to complete
+      const userCredential = await loginWithGoogle();
+      
+      // Get user data from Firestore to make sure everything is up-to-date
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      if (userDoc.exists()) {
+        // Small delay to ensure context updates
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
+      } else {
+        navigate('/');
+      }
     } catch (error) {
+      console.error('Google sign-in error:', error);
       setError('Failed to sign in with Google');
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

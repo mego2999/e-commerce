@@ -52,12 +52,34 @@ export function AuthProvider({ children }) {
   }
 
   function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Update user data immediately
+        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const role = userData.role || (userData.isAdmin ? ROLES.ADMIN : ROLES.USER);
+          setUserRole(role);
+          setCurrentUser({ ...userCredential.user, role, isAdmin: userData.isAdmin });
+        }
+        return userCredential;
+      });
   }
 
   function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    return signInWithPopup(auth, provider)
+      .then(async (userCredential) => {
+        // Update user data immediately
+        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const role = userData.role || (userData.isAdmin ? ROLES.ADMIN : ROLES.USER);
+          setUserRole(role);
+          setCurrentUser({ ...userCredential.user, role, isAdmin: userData.isAdmin });
+        }
+        return userCredential;
+      });
   }
 
   function logout() {
