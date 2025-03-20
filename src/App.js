@@ -12,6 +12,7 @@ import AdminDashboard from './components/AdminDashboard';
 import Profile from './components/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import MyOrders from './components/MyOrders';
+import Cart from './components/Cart';
 import './App.css';
 
 function App() {
@@ -58,6 +59,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <MyOrders />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/cart"
+                  element={
+                    <PrivateRoute>
+                      <Cart />
                     </PrivateRoute>
                   }
                 />

@@ -110,7 +110,8 @@ const ProductCard = ({ product, onProductUpdate }) => {
     console.log('Adding to cart:', product);
     addToCart(product);
     console.log('Product added to cart');
-    alert(`${product.name} added to cart!`);
+    const productName = product.name || product.title || 'Product';
+    alert(`${productName} added to cart!`);
   };
 
   const availableStock = getCurrentStock();

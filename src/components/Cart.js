@@ -44,13 +44,13 @@ const Cart = () => {
         const productDoc = await getDoc(productRef);
         
         if (!productDoc.exists()) {
-          setError(`Product ${item.title} is no longer available.`);
+          setError(`Product ${item.name || item.title || 'unknown'} is no longer available.`);
           return;
         }
         
         const currentStock = productDoc.data().stock;
         if (currentStock < item.quantity) {
-          setError(`Not enough stock available for ${item.title}. Available: ${currentStock}`);
+          setError(`Not enough stock available for ${item.name || item.title || 'unknown'}. Available: ${currentStock}`);
           return;
         }
       }
@@ -116,9 +116,9 @@ const Cart = () => {
           <div className="cart-items">
             {cart.map(item => (
               <div key={item.id} className="cart-item">
-                <img src={item.image} alt={item.title} className="cart-item-image" />
+                <img src={item.image} alt={item.name || item.title} className="cart-item-image" />
                 <div className="cart-item-details">
-                  <h3>{item.title}</h3>
+                  <h3>{item.name || item.title}</h3>
                   <p className="cart-item-price">${item.price}</p>
                 </div>
                 <div className="cart-item-actions">
@@ -230,7 +230,7 @@ const Cart = () => {
               <div className="summary-items">
                 {cart.map(item => (
                   <div key={item.id} className="summary-item">
-                    <span>{item.title} x {item.quantity}</span>
+                    <span>{item.name || item.title} x {item.quantity}</span>
                     <span>${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
