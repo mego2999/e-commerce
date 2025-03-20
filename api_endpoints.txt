@@ -1,0 +1,130 @@
+E-Shop API Endpoints
+==================
+
+1. Firebase Authentication - Login
+--------------------------------
+URL: https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAdhZEQmMrg1WZN0ILlu79JHIFz2EhLuVI
+Method: POST
+Headers: 
+  Content-Type: application/json
+Body:
+{
+  "email": "admin@example.com",
+  "password": "123456",
+  "returnSecureToken": true
+}
+
+2. Fetch All Products
+--------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/products
+Method: GET
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+
+3. Fetch Single Product
+----------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/products/{PRODUCT_ID}
+Method: GET
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+
+4. Add to Cart
+-------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/carts/{USER_ID}
+Method: PATCH
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+  Content-Type: application/json
+Body:
+{
+  "fields": {
+    "items": {
+      "arrayUnion": {
+        "id": "product_id",
+        "quantity": 1,
+        "price": 9.99,
+        "title": "Product Name"
+      }
+    }
+  }
+}
+
+5. Get User's Cart
+-----------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/carts/{USER_ID}
+Method: GET
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+
+6. Process Order (Checkout)
+--------------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/orders
+Method: POST
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+  Content-Type: application/json
+Body:
+{
+  "fields": {
+    "userId": { "stringValue": "user_id" },
+    "items": { "arrayValue": { "values": [] } },
+    "total": { "doubleValue": 29.99 },
+    "status": { "stringValue": "pending" },
+    "createdAt": { "timestampValue": "2024-02-20T12:00:00Z" }
+  }
+}
+
+7. Get User's Orders
+-------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/orders?orderBy=userId&equalTo={USER_ID}
+Method: GET
+Headers:
+  Authorization: Bearer {ID_TOKEN}
+
+8. Add New Product (Admin Only)
+------------------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/products
+Method: POST
+Headers:
+  Authorization: Bearer {ADMIN_ID_TOKEN}
+  Content-Type: application/json
+Body:
+{
+  "fields": {
+    "title": { "stringValue": "Product Name" },
+    "description": { "stringValue": "Product Description" },
+    "price": { "doubleValue": 29.99 },
+    "stock": { "integerValue": 10 },
+    "category": { "stringValue": "category_name" },
+    "image": { "stringValue": "image_url" }
+  }
+}
+
+9. Update Order Status (Admin Only)
+---------------------------------
+URL: https://firestore.googleapis.com/v1/projects/test-a9211/databases/(default)/documents/orders/{ORDER_ID}
+Method: PATCH
+Headers:
+  Authorization: Bearer {ADMIN_ID_TOKEN}
+  Content-Type: application/json
+Body:
+{
+  "fields": {
+    "status": { "stringValue": "shipped" },
+    "updatedAt": { "timestampValue": "2024-02-20T12:00:00Z" }
+  }
+}
+
+Note:
+---------------
+1. Replace YOUR_API_KEY with your Firebase project's API key
+2. Replace {ID_TOKEN} with the token received after authentication
+3. Replace {USER_ID}, {PRODUCT_ID}, and {ORDER_ID} with actual IDs
+4. Replace test-a9211 with your actual Firebase project ID
+
+Authentication:
+--------------
+1. Make the login request first
+2. Get the idToken from the response
+3. Use this token in the Authorization header as "Bearer {idToken}"
+4. Admin endpoints require an admin user's token 

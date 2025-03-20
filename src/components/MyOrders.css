@@ -1,0 +1,155 @@
+.my-orders-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.my-orders-container h2 {
+  color: #1f2937;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 3rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.order-header {
+  padding: 1.5rem;
+  background: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-header h3 {
+  color: #1f2937;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.order-date {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.order-items {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-item {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.order-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-details h4 {
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.item-details p {
+  color: #64748b;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.order-footer {
+  padding: 1.5rem;
+  background: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+.order-total {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.order-status {
+  background: #10b981;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .my-orders-container {
+    padding: 1rem;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .order-item {
+    flex-direction: column;
+  }
+
+  .order-item img {
+    width: 100%;
+    height: 200px;
+  }
+
+  .order-footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+} 
