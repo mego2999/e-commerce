@@ -3,7 +3,7 @@ import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase/config';
-import { collection, addDoc, doc, getDoc, updateDoc, runTransaction } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import './Cart.css';
 
 const Cart = () => {
