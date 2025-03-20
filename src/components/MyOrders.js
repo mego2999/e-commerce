@@ -48,24 +48,28 @@ const MyOrders = () => {
               <div className="order-header">
                 <h3>Order #{order.id.slice(0, 8)}</h3>
                 <span className="order-date">
-                  {new Date(order.createdAt?.toDate()).toLocaleDateString()}
+                  {order.createdAt instanceof Date 
+                    ? order.createdAt.toLocaleDateString() 
+                    : order.createdAt?.toDate 
+                      ? order.createdAt.toDate().toLocaleDateString()
+                      : new Date().toLocaleDateString()}
                 </span>
               </div>
               <div className="order-items">
                 {order.items.map((item, index) => (
                   <div key={index} className="order-item">
-                    <img src={item.image} alt={item.title} />
+                    <img src={item.image} alt={item.name || item.title} />
                     <div className="item-details">
-                      <h4>{item.title}</h4>
+                      <h4>{item.name || item.title}</h4>
                       <p>Quantity: {item.quantity}</p>
-                      <p>Price: ${item.price}</p>
+                      <p>Price: ${parseFloat(item.price).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="order-footer">
-                <p className="order-total">Total: ${order.total}</p>
-                <p className="order-status">Status: {order.status}</p>
+                <p className="order-total">Total: ${parseFloat(order.total).toFixed(2)}</p>
+                <p className="order-status">Status: <span className={`status-${order.status}`}>{order.status}</span></p>
               </div>
             </div>
           ))}

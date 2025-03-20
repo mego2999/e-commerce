@@ -110,12 +110,44 @@
 }
 
 .order-status {
-  background: #10b981;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  font-weight: 600;
   font-size: 0.9rem;
   margin: 0;
+}
+
+.status-pending {
+  background-color: #f59e0b;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.status-processing {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.status-shipped {
+  background-color: #6366f1;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.status-delivered {
+  background-color: #10b981;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.status-cancelled {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
 }
 
 .loading {

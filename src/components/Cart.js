@@ -57,36 +57,40 @@ const Cart = () => {
 
       const shippingAddress = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`;
       
-      // Use a transaction to update stock and create order
-      await runTransaction(db, async (transaction) => {
-        // Create the order
-        const orderRef = await addDoc(collection(db, 'orders'), {
-          items: cart,
-          total: calculateTotal(),
-          customerEmail: currentUser.email,
-          customerName: shippingInfo.name,
-          shippingAddress,
-          phone: shippingInfo.phone,
-          status: 'pending',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: currentUser.uid
-        });
-
-        // Update stock for each item
-        for (const item of cart) {
-          const productRef = doc(db, 'products', item.id);
-          const productDoc = await transaction.get(productRef);
-          const newStock = productDoc.data().stock - item.quantity;
-          
-          transaction.update(productRef, { stock: newStock });
-        }
+      // First create the order
+      const orderRef = await addDoc(collection(db, 'orders'), {
+        items: cart,
+        total: calculateTotal(),
+        customerEmail: currentUser.email,
+        customerName: shippingInfo.name,
+        shippingAddress,
+        phone: shippingInfo.phone,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: currentUser.uid
       });
 
+      console.log("Order created with ID:", orderRef.id);
+
+      // Then update stock for each item separately
+      for (const item of cart) {
+        const productRef = doc(db, 'products', item.id);
+        const productDoc = await getDoc(productRef);
+        const currentStock = productDoc.data().stock;
+        const newStock = Math.max(0, currentStock - item.quantity);
+        
+        await updateDoc(productRef, { stock: newStock });
+        console.log(`Updated stock for ${item.name || item.title || item.id} to ${newStock}`);
+      }
+
       // Clear the cart and show success message
-      cart.forEach(item => removeFromCart(item.id));
+      for (const item of cart) {
+        removeFromCart(item.id);
+      }
+      
       alert('Order placed successfully! You can track your order in the My Orders section.');
-      navigate('/orders');
+      navigate('/my-orders'); // Navigate to my-orders instead of orders
     } catch (error) {
       console.error('Error creating order:', error);
       setError('There was an error processing your order. Please try again.');
