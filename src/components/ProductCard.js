@@ -200,15 +200,15 @@ const ProductCard = ({ product, onProductUpdate }) => {
         )}
 
         {error && <p className="error-message">{error}</p>}
+        
+        <button 
+          className="add-to-cart-btn"
+          disabled={availableStock === 0}
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+        </button>
       </div>
-
-      {error && <button 
-        className="add-to-cart-btn"
-        disabled={availableStock === 0}
-        onClick={handleAddToCart}
-      >
-        Add to Cart
-      </button>}
     </div>
   );
 };
