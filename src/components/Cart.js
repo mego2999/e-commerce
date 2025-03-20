@@ -7,7 +7,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import './Cart.css';
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
@@ -38,9 +38,12 @@ const Cart = () => {
     setError('');
     
     try {
+      // Save cart items for the order before clearing
+      const cartItems = [...cart];
+      
       // Create the order directly
       const orderRef = await addDoc(collection(db, 'orders'), {
-        items: cart,
+        items: cartItems,
         total: calculateTotal(),
         customerEmail: currentUser.email,
         customerName: shippingInfo.name,
@@ -54,11 +57,15 @@ const Cart = () => {
 
       console.log("Order created with ID:", orderRef.id);
 
-      // Clear the entire cart at once
-      cart.forEach(item => removeFromCart(item.id));
+      // Use a timeout to separate the order creation from cart clearing
+      setTimeout(() => {
+        // Clear the entire cart at once
+        clearCart();
+        
+        alert('Order placed successfully! You can track your order in the My Orders section.');
+        navigate('/my-orders');
+      }, 500);
       
-      alert('Order placed successfully! You can track your order in the My Orders section.');
-      navigate('/my-orders');
     } catch (error) {
       console.error('Error creating order:', error);
       setError('There was an error processing your order. Please try again.');
