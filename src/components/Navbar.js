@@ -6,8 +6,8 @@ import './Navbar.css';
 
 const Navbar = ({ onSearch }) => {
   const { currentUser, logout } = useAuth();
-  const cart = useCart();
-  const cartItemsCount = cart?.cartItems?.length || 0;
+  const { getCartItemCount } = useCart();
+  const cartItemsCount = getCartItemCount();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 

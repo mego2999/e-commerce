@@ -7,6 +7,7 @@ import './ProductCard.css';
 
 const ProductCard = ({ product, onProductUpdate }) => {
   const { addToCart, cart } = useCart();
+  console.log('Cart in ProductCard:', cart); // Debug cart
   const { currentUser } = useAuth();
   const [error, setError] = useState('');
   const [userDiscount, setUserDiscount] = useState(0);
@@ -106,7 +107,10 @@ const ProductCard = ({ product, onProductUpdate }) => {
       return;
     }
 
+    console.log('Adding to cart:', product);
     addToCart(product);
+    console.log('Product added to cart');
+    alert(`${product.name} added to cart!`);
   };
 
   const availableStock = getCurrentStock();
